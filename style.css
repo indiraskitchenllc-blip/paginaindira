@@ -3120,7 +3120,12 @@ box-shadow:0 10px 30px rgba(0,0,0,.2);
 transition:.3s;
 
 }
-
+.lang-btn-float{
+    position:fixed;
+    bottom:155px;
+    right:30px;
+    z-index:998;
+}
 .whatsapp-float:hover{
 
 transform:scale(1.1);
@@ -3174,12 +3179,12 @@ gap:12px;
 }
 
 .logo img{
-width:52px;
-height:52px;
+    width:60px;
+    height:60px;
 }
 
 .logo h2{
-font-size:1.5rem;
+    font-size:1.8rem;
 }
 
 .btn-buy-now{
@@ -3192,25 +3197,15 @@ padding:9px 18px;
 @media (max-width: 600px){
 
 .navbar{
-
 flex-wrap:wrap;
-
 row-gap:14px;
-
 padding:16px 6%;
-
 }
-
 .logo{
-
 width:100%;
-
 justify-content:space-between;
-
 flex-wrap:nowrap;
-
 gap:10px;
-
 }
 
 .btn-buy-now{
