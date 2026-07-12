@@ -309,8 +309,8 @@ border-bottom:1px solid rgba(255,255,255,.25);
 }
 
 .logo img{
-    width:65px;
-    height:65px;
+    width:70px;
+    height:70px;
     object-fit:contain;
 }
 
@@ -319,7 +319,7 @@ border-bottom:1px solid rgba(255,255,255,.25);
     font-weight:700;
     margin:0;
 
-font-size:2rem;
+font-size:2.1rem;
 
 color:var(--primary);
 
@@ -497,37 +497,27 @@ LANGUAGE TOGGLE
 ==========================*/
 
 .lang-btn{
-
-background:rgba(255,255,255,.35);
-
-border:1.5px solid rgba(255,255,255,.6);
-
-color:var(--primary-dark);
-
-font-weight:700;
-
-font-size:.78rem;
-
-padding:6px 12px;
-
-border-radius:50px;
-
-cursor:pointer;
-
-transition:.3s;
-
-letter-spacing:.5px;
-
+    background:var(--primary);
+    border:none;
+    color:white;
+    font-weight:700;
+    font-size:.85rem;
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    cursor:pointer;
+    transition:.3s;
+    letter-spacing:.5px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 10px 25px rgba(0,0,0,.18);
 }
 
 .lang-btn:hover{
-
-background:var(--primary);
-
-color:white;
-
-transform:translateY(-2px);
-
+    background:var(--primary-dark);
+    color:white;
+    transform:translateY(-2px) scale(1.05);
 }
 
 
@@ -3143,73 +3133,58 @@ RESPONSIVE
 ======================================================*/
 
 @media (max-width: 992px){
-
 .hero{
-
 padding:140px 6% 60px;
-
 }
-
 .hero-container{
-
 flex-direction:column;
-
 text-align:center;
-
 }
-
 .hero-content{
-
 max-width:100%;
-
 flex:1 1 100%;
-
 }
-
 .hero-image{
-
 max-width:100%;
-
 flex:1 1 100%;
-
 margin-top:10px;
-
 }
-
 .hero-image-frame{
-
 max-width:300px;
-
 }
-
 .hero-buttons{
-
 justify-content:center;
-
 }
-
 .hero-content h1{
-
 font-size:3.2rem;
-
 }
-
 .about{
-
 grid-template-columns:1fr;
-
 }
-
 .nav-links{
-
 display:none;
-
+}
+.hamburger{
+display:block;
 }
 
-.hamburger{
+.navbar{
+flex-wrap:nowrap;
+gap:12px;
+}
 
-display:block;
+.logo img{
+width:52px;
+height:52px;
+}
 
+.logo h2{
+font-size:1.5rem;
+}
+
+.btn-buy-now{
+font-size:.8rem;
+padding:9px 18px;
 }
 
 }
@@ -3269,6 +3244,12 @@ height:42px;
 flex-shrink:0;
 
 }
+    .lang-btn{
+    font-size:.7rem;
+    width:34px;
+    height:34px;
+}
+Con 
 
 .nav-icons{
 
