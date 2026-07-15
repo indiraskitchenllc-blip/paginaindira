@@ -74,6 +74,24 @@ backToTop.addEventListener("click", () => {
 
 
 //==============================
+// MOSTRAR BOTONES FLOTANTES SOLO DESPUÉS DEL HERO
+//==============================
+
+const floatingButtons = document.querySelectorAll(".whatsapp-float, .lang-btn-float, .cart-btn-float");
+const heroSection = document.querySelector(".hero");
+
+window.addEventListener("scroll", () => {
+    const heroHeight = heroSection.offsetHeight;
+
+    if (window.scrollY > heroHeight - 150) {
+        floatingButtons.forEach(btn => btn.classList.add("show-float"));
+    } else {
+        floatingButtons.forEach(btn => btn.classList.remove("show-float"));
+    }
+});
+
+
+//==============================
 // NAVBAR EFFECT ON SCROLL
 //==============================
 
