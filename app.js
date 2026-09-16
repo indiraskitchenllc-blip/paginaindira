@@ -562,6 +562,29 @@ clearCartBtn.addEventListener("click", () => {
 
 
 //==============================
+// DETALLES DEL PEDIDO (hora, extras, pedidos especiales, pick-up)
+//==============================
+
+const pickupTimeInput = document.getElementById("pickup-time");
+const orderExtrasInput = document.getElementById("order-extras");
+const orderSpecialInput = document.getElementById("order-special");
+const pickupLocationSelect = document.getElementById("pickup-location");
+const pickupAddressGroup = document.getElementById("pickup-address-group");
+const pickupAddressInput = document.getElementById("pickup-address");
+const dropoffPlaceInput = document.getElementById("dropoff-place");
+
+// mostrar el campo de direccion solo si eligen "Su propia casa"
+pickupLocationSelect.addEventListener("change", () => {
+    if (pickupLocationSelect.value === "Su propia casa") {
+        pickupAddressGroup.style.display = "flex";
+    } else {
+        pickupAddressGroup.style.display = "none";
+        pickupAddressInput.value = "";
+    }
+});
+
+
+//==============================
 // WHATSAPP ORDER
 //==============================
 
@@ -588,7 +611,37 @@ whatsappBtn.addEventListener("click", () => {
         total += DELIVERY_FEE;
     }
 
-    message += `%0ATotal: $${total.toFixed(2)}`;
+    message += `%0ATotal: $${total.toFixed(2)}%0A`;
+
+    // Detalles adicionales del pedido
+
+    message += "%0A---%0A";
+
+    if (pickupTimeInput.value) {
+        message += `%0AHora de recogida: ${pickupTimeInput.value}%0A`;
+    }
+
+    if (orderExtrasInput.value.trim()) {
+        message += `%0AExtras: ${orderExtrasInput.value.trim()}%0A`;
+    }
+
+    if (orderSpecialInput.value.trim()) {
+        message += `%0APedidos especiales: ${orderSpecialInput.value.trim()}%0A`;
+    }
+
+    if (pickupLocationSelect.value) {
+        message += `%0APick-up: ${pickupLocationSelect.value}`;
+
+        if (pickupLocationSelect.value === "Su propia casa" && pickupAddressInput.value.trim()) {
+            message += ` - ${pickupAddressInput.value.trim()}`;
+        }
+
+        message += "%0A";
+    }
+
+    if (dropoffPlaceInput.value.trim()) {
+        message += `%0ALugar de entrega/recogida: ${dropoffPlaceInput.value.trim()}%0A`;
+    }
 
     const phone = "14803437055"; // tu número real de WhatsApp
 
