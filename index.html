@@ -635,31 +635,25 @@ También puedes comprar nuestros quesillos directamente en estos puntos de venta
 <!-- UBICACIÓN 1 -->
 <div class="store-card fade-up">
 <i class="fa-solid fa-store"></i>
-<h3>The Lunch Box</h3>
-<p data-es="2539 W Bethany Home Rd, Phoenix, AZ 85017" data-en="2539 W Bethany Home Rd, Phoenix, AZ 85017">2539 W Bethany Home Rd, Phoenix, AZ 85017</p>
+<h3>Donde nos puedes encontrarnos</h3>
+<p data-en="Coming soon">Proximamente</p>
 </div>
 
 <!-- UBICACIÓN 2 -->
-<div class="store-card fade-up">
-<i class="fa-solid fa-store"></i>
+<div class="store-card store-card-soon fade-up">
+<i class="fa-solid fa-calendar-days"></i>
 <h3 data-es="Farmers Markets de Arizona" data-en="Arizona Farmers Markets">Farmers Markets de Arizona</h3>
-<p data-es="La ubicación varía — contáctanos para saber dónde estaremos esta semana." data-en="Location varies — contact us to find out where we'll be this week.">La ubicación varía — contáctanos para saber dónde estaremos esta semana.</p>
+<p data-es="Próximamente — esperando nuevas fechas." data-en="Coming soon — awaiting new dates.">Próximamente — esperando nuevas fechas.</p>
 </div>
 
 </div>
 
 <div class="map-box fade-up">
 
-<p class="map-caption" data-es="Encuéntranos en The Lunch Box:" data-en="Find us at The Lunch Box:">Encuéntranos en The Lunch Box:</p>
+<p class="map-caption" data-es="Coming soon" data-en="Find us at The Lunch Box:">Proximamente</p>
 
 <div class="map-frame">
-<iframe
-src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3326.1414090716594!2d-112.11645072430602!3d33.52370887336066!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x872b6ccc8235ae4b%3A0x1064cc42793fe813!2sLunch%20Box%20Cafe!5e0!3m2!1sen!2sus!4v1783543414691!5m2!1sen!2sus"
-allowfullscreen=""
-loading="lazy"
-referrerpolicy="strict-origin-when-cross-origin">
-</iframe>
-</div>
+<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d425348.8291985406!2d-112.124793!3d33.60432555!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x872b12ed50a179cb%3A0x8c69c7f8354a1bac!2sPhoenix%2C%20AZ!5e0!3m2!1sen!2sus!4v1789592903277!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
 
 </div>
 
@@ -1068,6 +1062,8 @@ Enviar
 
     </div>
 
+    <div class="cart-scroll-area">
+
     <div id="cart-items">
 
         <!-- Los productos se agregarán con JavaScript -->
@@ -1079,6 +1075,70 @@ Enviar
             <p data-es="Tu carrito está vacío." data-en="Your cart is empty.">Your cart is empty.</p>
 
         </div>
+
+    </div>
+
+    <div class="order-details">
+
+        <h3 data-es="Detalles del pedido" data-en="Order details">Detalles del pedido</h3>
+
+        <div class="input-group">
+
+            <label data-es="Hora de recogida" data-en="Pick-up time">Hora de recogida</label>
+
+            <input type="time" id="pickup-time">
+
+        </div>
+
+        <div class="input-group">
+
+            <label data-es="Extras (ingredientes, productos o cantidades adicionales)" data-en="Extras (extra ingredients, products or quantities)">Extras (ingredientes, productos o cantidades adicionales)</label>
+
+            <textarea id="order-extras" rows="2" data-es-placeholder="Ej. Extra caramelo, una porcion mas, etc." data-en-placeholder="E.g. extra caramel, one more portion, etc." placeholder="Ej. Extra caramelo, una porcion mas, etc."></textarea>
+
+        </div>
+
+        <div class="input-group">
+
+            <label data-es="Pedidos especiales" data-en="Special requests">Pedidos especiales</label>
+
+            <textarea id="order-special" rows="2" data-es-placeholder="Cualquier cosa especifica que necesites" data-en-placeholder="Anything specific you need" placeholder="Cualquier cosa especifica que necesites"></textarea>
+
+        </div>
+
+        <div class="input-group">
+
+            <label data-es="Pick-up: elige donde recogerlo" data-en="Pick-up: choose where to get it">Pick-up: elige donde recogerlo</label>
+
+            <select id="pickup-location">
+
+                <option value="Farmers Market" data-es="Farmers Market" data-en="Farmers Market">Farmers Market</option>
+
+                <option value="Otra tienda/punto de venta" data-es="Otra tienda/punto de venta" data-en="Another store/pick-up point">Otra tienda/punto de venta</option>
+
+                <option value="Su propia casa" data-es="Su propia casa" data-en="Their own house">Su propia casa</option>
+
+            </select>
+
+        </div>
+
+        <div class="input-group" id="pickup-address-group" style="display:none;">
+
+            <label data-es="Direccion de la casa" data-en="Home address">Direccion de la casa</label>
+
+            <input type="text" id="pickup-address" data-es-placeholder="Escribe la direccion completa" data-en-placeholder="Enter the full address" placeholder="Escribe la direccion completa">
+
+        </div>
+
+        <div class="input-group">
+
+            <label data-es="Lugar de entrega/recogida" data-en="Delivery/pick-up location">Lugar de entrega/recogida</label>
+
+            <input type="text" id="dropoff-place" data-es-placeholder="Punto acordado para la entrega o recogida" data-en-placeholder="Agreed spot for delivery or pick-up" placeholder="Punto acordado para la entrega o recogida">
+
+        </div>
+
+    </div>
 
     </div>
 
@@ -1406,5 +1466,283 @@ Contactame
 <script src="app.js"></script>
 
 </body>
+
+</html>
+
+
+</aside>
+
+<!--=================================
+        CONTACT MODAL
+==================================-->
+
+<div class="modal" id="contact-modal">
+
+    <div class="modal-content">
+
+        <button class="close-modal">
+
+            <i class="fa-solid fa-xmark"></i>
+
+        </button>
+
+        <h2 data-es="Contactame" data-en="Contact us">Contactame</h2>
+
+        <p data-es="Nos encantaria escuchar de ti" data-en="We'd love to hear from you">
+
+           Nos encantaria escuchar de ti
+
+        </p>
+
+        <form id="contact-form">
+
+            <div class="input-group">
+
+                <label data-es="Nombre" data-en="Name">Nombre</label>
+
+                <input
+                    type="text"
+                    placeholder="Tu nombre"
+                    required>
+
+            </div>
+
+            <div class="input-group">
+
+                <label data-es="Email" data-en="Email">Email</label>
+
+                <input
+                    type="email"
+                    placeholder="ej.example@email.com"
+                    required>
+
+            </div>
+
+            <div class="input-group">
+
+                <label data-es="Telefono" data-en="Phone">Telefono</label>
+
+                <input
+                    type="tel"
+                    placeholder="ej.(123) 456-7890">
+
+            </div>
+
+            <div class="input-group">
+
+                <label data-es="Tu mensaje" data-en="Your message">Tu mensaje</label>
+
+                <textarea
+                    rows="6"
+                    placeholder="¿Como puedo ayudarte?"
+                    required></textarea>
+
+            </div>
+
+            <button
+                type="submit"
+                class="btn-primary"
+                data-es="Enviar" data-en="Send">
+
+                Enviar
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!--=================================
+        BACK TO TOP
+==================================-->
+
+<button id="backToTop">
+
+    <i class="fa-solid fa-arrow-up"></i>
+
+</button>
+
+<!--=================================
+        WHATSAPP FLOAT BUTTON
+==================================-->
+<button id="lang-toggle" class="lang-btn lang-btn-float" title="Cambiar idioma / Switch language">EN</button>
+<a
+href="https://wa.me/14803437055"
+target="_blank"
+class="whatsapp-float">
+
+<i class="fa-brands fa-whatsapp"></i>
+
+</a>
+
+
+<footer id="contact">
+
+<div class="footer-container">
+
+<div class="footer-column">
+
+<h2>
+
+Indira's Kitchen
+
+</h2>
+
+<p data-es="Lo que comenzó como un sueño hace muchos años, hoy se ha transformado en un compromiso." data-en="What began as a dream many years ago has today become a commitment.">
+
+Lo que comenzó como un sueño hace muchos años, hoy se ha transformado en un compromiso.
+
+
+</p>
+
+<div class="social-icons">
+
+<a href="https://www.facebook.com/people/Indira-Kitchen/61579346738055/">
+
+<i class="fa-brands fa-facebook-f"></i>
+
+</a>
+
+<a href="https://www.instagram.com/indiraskitchen7729/">
+
+<i class="fa-brands fa-instagram"></i>
+
+</a>
+
+<a href="https://www.tiktok.com/@indiragonzalez26?_r=1&_t=ZP-97l0gQtEi91">
+
+<i class="fa-brands fa-tiktok"></i>
+
+</a>
+
+
+</div>
+
+</div>
+
+<div class="footer-column">
+
+<h3 data-es="Links Rapidos" data-en="Quick Links">
+
+Links Rapidos
+</h3>
+
+<ul>
+
+<li><a href="#home" data-es="Bienvenida" data-en="Home">Bienvenida</a></li>
+
+<li><a href="#products" data-es="Menu" data-en="Menu">Menu</a></li>
+
+<li><a href="#delivery" data-es="Entregas" data-en="Delivery">Entregas</a></li>
+
+<li><a href="#wholesale" data-es="Tiendas" data-en="Stores">Tiendas</a></li>
+
+<li><a href="#about" data-es="Acerca de nosotros" data-en="About us">Acerca de nosotros</a></li>
+
+<li><a href="#gallery" data-es="Galeria" data-en="Gallery">Galeria</a></li>
+
+<li><a href="#reviews" data-es="Reseñas" data-en="Reviews">Reseñas</a></li>
+
+</ul>
+
+</div>
+
+<div class="footer-column">
+
+<h3 data-es="Horario" data-en="Business Hours">
+
+Business Hours
+
+</h3>
+
+<p data-es="Lunes - Viernes" data-en="Monday - Friday">Monday - Friday</p>
+
+<p>9:00 AM - 6:00 PM</p>
+
+<br>
+
+<p data-es="Sábado" data-en="Saturday">Saturday</p>
+
+<p>09:00 AM - 6:00 PM</p>
+
+<br>
+
+<p data-es="Domingo" data-en="Sunday">Sunday</p>
+
+<p>9:00 AM - 6:00 PM</p>
+
+</div>
+
+<div class="footer-column">
+
+<h3 data-es="Contacto" data-en="Contact">
+
+Contacto
+
+</h3>
+
+<p>
+
+<i class="fa-solid fa-phone"></i>
+
++1 (480) 343-7055
+
+</p>
+
+<p>
+
+<i class="fa-solid fa-envelope"></i>
+
+Indiras.kitchenllc@gmail.com
+
+</p>
+
+<p>
+
+<i class="fa-solid fa-location-dot"></i>
+
+Mesa, Arizona
+
+</p>
+
+<button
+class="btn-primary"
+id="contact-button"
+data-es="Contactame" data-en="Contact us">
+
+Contactame
+
+</button>
+
+</div>
+
+</div>
+
+<hr>
+
+<div class="footer-bottom">
+
+<p>
+
+© 2026 Indira's Kitchen.
+<span data-es="Todos los derechos reservados." data-en="All Rights Reserved.">All Rights Reserved.</span>
+
+</p>
+
+</div>
+
+</footer>
+
+<!--=================================
+        JAVASCRIPT
+==================================-->
+
+<script src="app.js"></script>
+
+</body>
+
+</html>
 
 </html>
