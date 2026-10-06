@@ -73,22 +73,7 @@ backToTop.addEventListener("click", () => {
 });
 
 
-//==============================
-// MOSTRAR BOTONES FLOTANTES SOLO DESPUÉS DEL HERO
-//==============================
-
-const floatingButtons = document.querySelectorAll(".whatsapp-float, .lang-btn-float, .cart-btn-float");
-const heroSection = document.querySelector(".hero");
-
-window.addEventListener("scroll", () => {
-    const heroHeight = heroSection.offsetHeight;
-
-    if (window.scrollY > heroHeight - 150) {
-        floatingButtons.forEach(btn => btn.classList.add("show-float"));
-    } else {
-        floatingButtons.forEach(btn => btn.classList.remove("show-float"));
-    }
-});
+// Los botones flotantes se mantienen visibles de forma permanente y accesible
 
 
 //==============================
@@ -202,6 +187,7 @@ quoteAddButtons.forEach(button => {
             alert(currentLang === "en"
                 ? "Please enter a quantity of at least 20 units."
                 : "Por favor ingresa una cantidad mínima de 20 unidades.");
+            input?.focus();
             return;
         }
 
@@ -215,29 +201,60 @@ quoteAddButtons.forEach(button => {
             quoteItems.push({ size, label, qty, unitPrice });
         }
 
+        // Agregar también al carrito lateral
+        const wholesaleId = "wholesale-" + size;
+        const wholesaleName = size === "4oz" ? "Quesillo 4 oz (Mayoreo)" : "Quesillo 8 oz (Mayoreo)";
+        const existingCartItem = cartItems.find(item => item.id === wholesaleId);
+        if (existingCartItem) {
+            existingCartItem.quantity = qty;
+            existingCartItem.price = unitPrice;
+        } else {
+            cartItems.push({
+                id: wholesaleId,
+                name: wholesaleName,
+                price: unitPrice,
+                quantity: qty,
+                isWholesale: true,
+                size: size,
+                label: label
+            });
+        }
+
         input.value = "";
         renderQuote();
+        updateCart();
+
+        // Feedback y abrir carrito
+        cartBtn.classList.add("added");
+        setTimeout(() => cartBtn.classList.remove("added"), 300);
+        cart.classList.add("active");
     });
 });
 
 function removeQuoteItem(size) {
     quoteItems = quoteItems.filter(item => item.size !== size);
+    cartItems = cartItems.filter(item => item.id !== "wholesale-" + size);
     renderQuote();
+    updateCart();
 }
 
 function renderQuote() {
 
     quoteItemsContainer.innerHTML = "";
+    const bFields = document.getElementById("wholesale-business-fields");
 
     if (quoteItems.length === 0) {
         const emptyText = currentLang === "en"
-            ? "You haven't added anything yet. Choose a quantity above and press \"Add to quote\"."
-            : "Aún no has agregado nada. Elige una cantidad arriba y presiona \"Agregar a cotización\".";
+            ? "You haven't added anything yet. Choose a quantity above and press \"Add to Cart\"."
+            : "Aún no has agregado nada. Elige una cantidad arriba y presiona \"Agregar al carrito\".";
 
         quoteItemsContainer.innerHTML = `<p class="quote-empty">${emptyText}</p>`;
         quoteTotalElement.textContent = "0.00";
+        if (bFields) bFields.style.display = "none";
         return;
     }
+
+    if (bFields) bFields.style.display = "block";
 
     let total = 0;
 
@@ -253,13 +270,37 @@ function renderQuote() {
             <span class="quote-line-info">${item.label} &times; ${item.qty} ${unitLabel} ($${item.unitPrice.toFixed(2)} c/u)</span>
             <span>
                 <strong>$${subtotal.toFixed(2)}</strong>
-                <button type="button" onclick="removeQuoteItem('${item.size}')">×</button>
+                <button type="button" onclick="removeQuoteItem('${item.size}')">&times;</button>
             </span>
         `;
         quoteItemsContainer.appendChild(line);
     });
 
     quoteTotalElement.textContent = total.toFixed(2);
+}
+
+// Sincronizar inputs de nombre y dirección entre cotizador y carrito
+const wholesaleBusinessName = document.getElementById("wholesale-business-name");
+const wholesaleDeliveryAddress = document.getElementById("wholesale-delivery-address");
+const cartBusinessName = document.getElementById("cart-business-name");
+const cartDeliveryAddress = document.getElementById("cart-delivery-address");
+
+if (wholesaleBusinessName && cartBusinessName) {
+    wholesaleBusinessName.addEventListener("input", () => {
+        cartBusinessName.value = wholesaleBusinessName.value;
+    });
+    cartBusinessName.addEventListener("input", () => {
+        wholesaleBusinessName.value = cartBusinessName.value;
+    });
+}
+
+if (wholesaleDeliveryAddress && cartDeliveryAddress) {
+    wholesaleDeliveryAddress.addEventListener("input", () => {
+        cartDeliveryAddress.value = wholesaleDeliveryAddress.value;
+    });
+    cartDeliveryAddress.addEventListener("input", () => {
+        wholesaleDeliveryAddress.value = cartDeliveryAddress.value;
+    });
 }
 
 if (quoteWhatsappBtn) {
@@ -272,7 +313,28 @@ if (quoteWhatsappBtn) {
             return;
         }
 
-        let message = "Hola, me gustaria solicitar la siguiente cotizacion al mayoreo:%0A%0A";
+        const nameInput = document.getElementById("wholesale-business-name") || document.getElementById("cart-business-name");
+        const addrInput = document.getElementById("wholesale-delivery-address") || document.getElementById("cart-delivery-address");
+        const bName = (nameInput?.value || "").trim();
+        const bAddr = (addrInput?.value || "").trim();
+
+        if (!bName) {
+            alert(currentLang === "en"
+                ? "Please enter your business or contact name."
+                : "Por favor ingresa el nombre de tu negocio o contacto.");
+            nameInput?.focus();
+            return;
+        }
+
+        if (!bAddr) {
+            alert(currentLang === "en"
+                ? "Please enter the delivery address for your business."
+                : "Por favor ingresa la dirección de entrega de tu negocio.");
+            addrInput?.focus();
+            return;
+        }
+
+        let message = "Hola, me gustaría solicitar la siguiente cotización al mayoreo (con delivery para negocio):%0A%0A";
         let total = 0;
 
         quoteItems.forEach(item => {
@@ -282,6 +344,9 @@ if (quoteWhatsappBtn) {
         });
 
         message += `%0ATotal estimado: $${total.toFixed(2)}`;
+        message += `%0A%0A*Modalidad: Delivery exclusivo para Negocio / Comercio*`;
+        message += `%0A*Nombre del Negocio:* ${encodeURIComponent(bName)}`;
+        message += `%0A*Dirección de entrega:* ${encodeURIComponent(bAddr)}`;
 
         const phone = "14803437055";
         const url = `https://wa.me/${phone}?text=${message}`;
@@ -334,18 +399,10 @@ if (pageContactForm) {
 //////////////////////////////////////////////////////
 
 let cartItems = [];
-let deliveryRequested = false;
-const DELIVERY_FEE = 10;
 
 const cartItemsContainer = document.getElementById("cart-items");
 const totalElement = document.getElementById("total");
 const cartCountElement = document.getElementById("cart-count");
-const deliveryCheckbox = document.getElementById("delivery-checkbox");
-
-deliveryCheckbox.addEventListener("change", () => {
-    deliveryRequested = deliveryCheckbox.checked;
-    updateCart();
-});
 
 
 //==============================
@@ -415,21 +472,29 @@ function updateCart() {
 
     cartItemsContainer.innerHTML = "";
 
+    const pickupNotice = document.getElementById("cart-pickup-notice");
+    const wholesaleDelivery = document.getElementById("cart-wholesale-delivery");
+
     let total = 0;
 
     if (cartItems.length === 0) {
 
+        const emptyMsg = currentLang === "en" ? "Your cart is empty." : "Tu carrito está vacío.";
         cartItemsContainer.innerHTML = `
             <div class="empty-cart">
                 <i class="fa-solid fa-cart-shopping"></i>
-                <p>Your cart is empty.</p>
+                <p>${emptyMsg}</p>
             </div>
         `;
 
         totalElement.textContent = "0.00";
+        if (pickupNotice) pickupNotice.style.display = "block";
+        if (wholesaleDelivery) wholesaleDelivery.style.display = "none";
         updateCartCount();
         return;
     }
+
+    const hasWholesale = cartItems.some(item => item.isWholesale);
 
     cartItems.forEach(item => {
 
@@ -439,31 +504,54 @@ function updateCart() {
 
         itemElement.classList.add("cart-item");
 
-        itemElement.innerHTML = `
-            <h4>${item.name}</h4>
-            <p>$${item.price}</p>
+        if (item.isWholesale) {
+            itemElement.innerHTML = `
+                <h4>${item.name}</h4>
+                <p>$${item.price.toFixed(2)} c/u &times; ${item.quantity} = $${(item.price * item.quantity).toFixed(2)}</p>
 
-            <div class="qty-controls">
+                <div class="qty-controls">
 
-                <button onclick="decreaseQty('${item.id}')">-</button>
+                    <button type="button" onclick="decreaseQty('${item.id}')">-</button>
 
-                <span>${item.quantity}</span>
+                    <span>${item.quantity}</span>
 
-                <button onclick="increaseQty('${item.id}')">+</button>
+                    <button type="button" onclick="increaseQty('${item.id}')">+</button>
 
-                <button onclick="removeItem('${item.id}')">x</button>
+                    <button type="button" onclick="removeItem('${item.id}')">&times;</button>
 
-            </div>
-        `;
+                </div>
+            `;
+        } else {
+            itemElement.innerHTML = `
+                <h4>${item.name}</h4>
+                <p>$${item.price.toFixed(2)}</p>
+
+                <div class="qty-controls">
+
+                    <button type="button" onclick="decreaseQty('${item.id}')">-</button>
+
+                    <span>${item.quantity}</span>
+
+                    <button type="button" onclick="increaseQty('${item.id}')">+</button>
+
+                    <button type="button" onclick="removeItem('${item.id}')">&times;</button>
+
+                </div>
+            `;
+        }
 
         cartItemsContainer.appendChild(itemElement);
     });
 
-    if (deliveryRequested) {
-        total += DELIVERY_FEE;
-    }
-
     totalElement.textContent = total.toFixed(2);
+
+    if (hasWholesale) {
+        if (pickupNotice) pickupNotice.style.display = "none";
+        if (wholesaleDelivery) wholesaleDelivery.style.display = "block";
+    } else {
+        if (pickupNotice) pickupNotice.style.display = "block";
+        if (wholesaleDelivery) wholesaleDelivery.style.display = "none";
+    }
 
     updateCartCount();
 }
@@ -478,7 +566,18 @@ function increaseQty(id) {
     const item = cartItems.find(i => i.id === id);
 
     if (item) {
-        item.quantity++;
+        if (item.isWholesale) {
+            item.quantity += 5;
+            item.price = getUnitPrice(item.size, item.quantity);
+            const qItem = quoteItems.find(qi => qi.size === item.size);
+            if (qItem) {
+                qItem.qty = item.quantity;
+                qItem.unitPrice = item.price;
+            }
+            renderQuote();
+        } else {
+            item.quantity++;
+        }
         updateCart();
     }
 }
@@ -493,13 +592,31 @@ function decreaseQty(id) {
     const item = cartItems.find(i => i.id === id);
 
     if (item) {
-
-        item.quantity--;
-
-        if (item.quantity <= 0) {
-            cartItems = cartItems.filter(i => i.id !== id);
+        if (item.isWholesale) {
+            if (item.quantity <= 20) {
+                const confirmMsg = currentLang === "en"
+                    ? "The minimum wholesale quantity is 20 units. Remove this item from cart?"
+                    : "La cantidad mínima al mayoreo es de 20 unidades. ¿Deseas eliminar este producto del carrito?";
+                if (confirm(confirmMsg)) {
+                    removeItem(id);
+                }
+                return;
+            }
+            item.quantity -= 5;
+            if (item.quantity < 20) item.quantity = 20;
+            item.price = getUnitPrice(item.size, item.quantity);
+            const qItem = quoteItems.find(qi => qi.size === item.size);
+            if (qItem) {
+                qItem.qty = item.quantity;
+                qItem.unitPrice = item.price;
+            }
+            renderQuote();
+        } else {
+            item.quantity--;
+            if (item.quantity <= 0) {
+                cartItems = cartItems.filter(i => i.id !== id);
+            }
         }
-
         updateCart();
     }
 }
@@ -512,6 +629,12 @@ function decreaseQty(id) {
 function removeItem(id) {
 
     cartItems = cartItems.filter(item => item.id !== id);
+
+    if (id.startsWith("wholesale-")) {
+        const size = id.replace("wholesale-", "");
+        quoteItems = quoteItems.filter(item => item.size !== size);
+        renderQuote();
+    }
 
     updateCart();
 }
@@ -528,8 +651,25 @@ function loadCart() {
     const savedCart = localStorage.getItem("cart");
 
     if (savedCart) {
-        cartItems = JSON.parse(savedCart);
-        updateCart();
+        try {
+            cartItems = JSON.parse(savedCart);
+            quoteItems = [];
+            cartItems.forEach(item => {
+                if (item.isWholesale) {
+                    quoteItems.push({
+                        size: item.size,
+                        label: item.size === "4oz" ? "4 oz" : "8 oz",
+                        qty: item.quantity,
+                        unitPrice: item.price
+                    });
+                }
+            });
+            updateCart();
+            renderQuote();
+        } catch (e) {
+            cartItems = [];
+            updateCartCount();
+        }
     } else {
         updateCartCount();
     }
@@ -557,30 +697,9 @@ const clearCartBtn = document.getElementById("clear-cart");
 
 clearCartBtn.addEventListener("click", () => {
     cartItems = [];
+    quoteItems = [];
+    renderQuote();
     updateCart();
-});
-
-
-//==============================
-// DETALLES DEL PEDIDO (hora, extras, pedidos especiales, pick-up)
-//==============================
-
-const pickupTimeInput = document.getElementById("pickup-time");
-const orderExtrasInput = document.getElementById("order-extras");
-const orderSpecialInput = document.getElementById("order-special");
-const pickupLocationSelect = document.getElementById("pickup-location");
-const pickupAddressGroup = document.getElementById("pickup-address-group");
-const pickupAddressInput = document.getElementById("pickup-address");
-const dropoffPlaceInput = document.getElementById("dropoff-place");
-
-// mostrar el campo de direccion solo si eligen "Su propia casa"
-pickupLocationSelect.addEventListener("change", () => {
-    if (pickupLocationSelect.value === "Su propia casa") {
-        pickupAddressGroup.style.display = "flex";
-    } else {
-        pickupAddressGroup.style.display = "none";
-        pickupAddressInput.value = "";
-    }
 });
 
 
@@ -593,54 +712,51 @@ const whatsappBtn = document.getElementById("whatsapp-order");
 whatsappBtn.addEventListener("click", () => {
 
     if (cartItems.length === 0) {
-        alert("Your cart is empty.");
+        alert(currentLang === "en" ? "Your cart is empty." : "Tu carrito está vacío.");
         return;
     }
 
-    let message = "Hola, me gustaria ordenar lo siguiente:%0A%0A";
+    const hasWholesale = cartItems.some(i => i.isWholesale);
+
+    let message = "Hola, me gustaría ordenar lo siguiente:%0A%0A";
 
     let total = 0;
 
     cartItems.forEach(item => {
-        message += `- ${item.name} x${item.quantity} - $${item.price * item.quantity}%0A`;
-        total += item.price * item.quantity;
+        const itemTotal = item.price * item.quantity;
+        message += `- ${item.name} x${item.quantity} - $${itemTotal.toFixed(2)}%0A`;
+        total += itemTotal;
     });
 
-    if (deliveryRequested) {
-        message += `%0ATambien me gustaria el envio a domicilio (+$${DELIVERY_FEE})%0A`;
-        total += DELIVERY_FEE;
-    }
+    message += `%0ATotal: $${total.toFixed(2)}`;
 
-    message += `%0ATotal: $${total.toFixed(2)}%0A`;
+    if (hasWholesale) {
+        const nameInput = document.getElementById("cart-business-name") || document.getElementById("wholesale-business-name");
+        const addrInput = document.getElementById("cart-delivery-address") || document.getElementById("wholesale-delivery-address");
+        const bName = (nameInput?.value || "").trim();
+        const bAddr = (addrInput?.value || "").trim();
 
-    // Detalles adicionales del pedido
-
-    message += "%0A---%0A";
-
-    if (pickupTimeInput.value) {
-        message += `%0AHora de recogida: ${pickupTimeInput.value}%0A`;
-    }
-
-    if (orderExtrasInput.value.trim()) {
-        message += `%0AExtras: ${orderExtrasInput.value.trim()}%0A`;
-    }
-
-    if (orderSpecialInput.value.trim()) {
-        message += `%0APedidos especiales: ${orderSpecialInput.value.trim()}%0A`;
-    }
-
-    if (pickupLocationSelect.value) {
-        message += `%0APick-up: ${pickupLocationSelect.value}`;
-
-        if (pickupLocationSelect.value === "Su propia casa" && pickupAddressInput.value.trim()) {
-            message += ` - ${pickupAddressInput.value.trim()}`;
+        if (!bName) {
+            alert(currentLang === "en"
+                ? "Please enter your business or contact name for wholesale delivery."
+                : "Por favor ingresa el nombre de tu negocio o contacto para el delivery al mayoreo.");
+            nameInput?.focus();
+            return;
         }
 
-        message += "%0A";
-    }
+        if (!bAddr) {
+            alert(currentLang === "en"
+                ? "Please enter the delivery address for your business."
+                : "Por favor ingresa la dirección de entrega de tu negocio.");
+            addrInput?.focus();
+            return;
+        }
 
-    if (dropoffPlaceInput.value.trim()) {
-        message += `%0ALugar de entrega/recogida: ${dropoffPlaceInput.value.trim()}%0A`;
+        message += `%0A%0A*Modalidad: Delivery exclusivo para Negocio / Comercio*`;
+        message += `%0A*Nombre del Negocio:* ${encodeURIComponent(bName)}`;
+        message += `%0A*Dirección de entrega:* ${encodeURIComponent(bAddr)}`;
+    } else {
+        message += `%0A%0A*Modalidad: Solo Pick-up (Retiro en cocina)*%0A_Por favor compárteme la dirección para coordinar el retiro de mi pedido._`;
     }
 
     const phone = "14803437055"; // tu número real de WhatsApp
