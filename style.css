@@ -3844,3 +3844,49 @@ font-size:.95rem;
     }
 
 }
+/*======================================================
+HOLIDAY HOURS (FOOTER)
+======================================================*/
+.holiday-hours {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px dashed rgba(198, 142, 23, 0.4);
+}
+.holiday-hours h4 {
+    color: var(--primary);
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: .3px;
+}
+.holiday-item {
+    margin-bottom: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px 14px;
+    border-radius: 12px;
+    border-left: 3px solid var(--primary);
+}
+.holiday-item:last-child {
+    margin-bottom: 0;
+}
+.holiday-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+.holiday-header i {
+    color: var(--primary);
+    font-size: 0.85rem;
+}
+.holiday-header strong {
+    color: #fff;
+    font-size: 0.92rem;
+    font-weight: 700;
+}
+.holiday-detail {
+    color: #ccc;
+    font-size: 0.84rem;
+    margin: 0;
+    line-height: 1.4;
+}
